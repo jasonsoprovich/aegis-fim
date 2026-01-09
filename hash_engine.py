@@ -19,12 +19,3 @@ def set_baseline(directory):
             baseline[abs_path] = file_hash
 
     return baseline
-
-
-if __name__ == "__main__":
-    target = "./test_dir"
-    print(f"Scanning {target}")
-    current_baseline = set_baseline(target)
-
-    for path, file_hash in current_baseline.items():
-        print(f"{path} -> file-hash-placeholder")
