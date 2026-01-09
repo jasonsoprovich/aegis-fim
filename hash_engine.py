@@ -13,8 +13,7 @@ def set_baseline(directory):
     baseline = {}
     for root, _, files in os.walk(directory):
         for file in files:
-            relative_path = os.path.join(root, file)
-            abs_path = os.path.abspath(relative_path)
+            abs_path = os.path.abspath(os.path.join(root, file))
             file_hash = "placeholder function"
             baseline[abs_path] = file_hash
 
