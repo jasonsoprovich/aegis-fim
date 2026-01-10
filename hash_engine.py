@@ -1,4 +1,5 @@
 import hashlib
+import json
 import os
 
 # def list_files_recursively(path="."):
@@ -30,3 +31,9 @@ def set_baseline(directory):
             baseline[abs_path] = file_hash
 
     return baseline
+
+
+def save_baseline(data, filename):
+    json_string = json.dumps(data, sort_keys=True, indent=4)
+    with open(filename, "w") as file:
+        file.write(json_string)

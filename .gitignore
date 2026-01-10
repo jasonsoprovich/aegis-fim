@@ -1,3 +1,4 @@
 test_dir/
 hash_reference.py
 __pycache__
+data/
