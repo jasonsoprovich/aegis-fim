@@ -34,6 +34,14 @@ def set_baseline(directory):
 
 
 def save_baseline(data, filename):
-    json_string = json.dumps(data, sort_keys=True, indent=4)
-    with open(filename, "w") as file:
-        file.write(json_string)
+    with open(filename, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+def load_baseline(filename):
+    if not os.path.exists(filename):
+        return None
+
+    with open(filename, "r") as f:
+        data = json.load(f)
+        return data
