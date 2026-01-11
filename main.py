@@ -1,3 +1,4 @@
+import json
 import os
 
 from hash_engine import load_baseline, save_baseline, set_baseline
@@ -22,16 +23,11 @@ def main():
     # Load baseline json and print results
     print(f"Loading baseline file: {baseline_filename}")
     read_baseline_json = load_baseline(baseline_filename)
-    print(f"{read_baseline_json}")
+    print_output(read_baseline_json)  # debugging
 
 
-# Display file:hash output
-# for abs_path, file_hash in current_baseline.items():
-#     short_path = os.path.relpath(abs_path, os.getcwd())
-
-#     print(f"File: {short_path}")
-#     print(f"Hash: {file_hash}")
-#     print("-" * 20)
+def print_output(output):
+    print(json.dumps(output, indent=4))
 
 
 if __name__ == "__main__":
