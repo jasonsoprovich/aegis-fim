@@ -45,3 +45,20 @@ def load_baseline(filename):
     with open(filename, "r") as f:
         data = json.load(f)
         return data
+
+
+def compare_baseline(old_baseline, new_baseline):
+    if old_baseline is None:
+        print(f"No {old_baseline} found. Creating new baseline file")
+        #### create new baseline file
+
+    #### change prints to return dictionaries
+    for path in new_baseline:
+        if path not in old_baseline:
+            print(f"New: {path}")
+        elif new_baseline[path] != old_baseline[path]:
+            print(f"Modified: {path}")
+
+    for path in old_baseline:
+        if path not in new_baseline:
+            print(f"Deleted: {path}")
