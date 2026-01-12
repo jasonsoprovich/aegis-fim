@@ -1,29 +1,38 @@
 import json
 import os
 
-from hash_engine import load_baseline, save_baseline, set_baseline
+from hash_engine import compare_baseline, load_baseline, save_baseline, set_baseline
 
 
 def main():
     target = "./test_dir"
+    baseline_filename = "./data/baseline.json"
 
     if not os.path.exists(target):
         print(f"Directory {target} not found.")
         return
 
-    # Crawl target directory and generate hashes for all files
-    print(f"Generating baseline for: {target}.")
-    current_baseline = set_baseline(target)
+    print(f"Scanning: {target}.")
+    current_scan = set_baseline(target)
+    old_baseline = load_baseline(baseline_filename)
 
-    # Save filenames and hashes to new baseline json
-    baseline_filename = "./data/baseline.json"
-    print(f"Saving baseline file to: {baseline_filename}.")
-    save_baseline(current_baseline, baseline_filename)
+    if old_baseline is None:
+        print("First run detected. Saving baseline.")
+        save_baseline(current_scan, baseline_filename)
+        print("Baseline established. Run again to scan for changes.")
+    else:
+        print("Existing baseline found. Comparing files.")
+        changes = compare_baseline(old_baseline, current_scan)
 
-    # Load baseline json and print results
-    print(f"Loading baseline file: {baseline_filename}")
-    read_baseline_json = load_baseline(baseline_filename)
-    print_output(read_baseline_json)  # debugging
+        if not changes["new"] and not changes["modified"] and not changes["deleted"]:
+            print("No changes detected. Integrity verified.")
+        else:
+            for path in changes["new"]:
+                print(f"[NEW] {path}")
+            for path in changes["modified"]:
+                print(f"[MODIFIED] {path}")
+            for path in changes["deleted"]:
+                print(f"[DELETED] {path}")
 
 
 def print_output(output):
