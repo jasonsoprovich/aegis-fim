@@ -48,17 +48,23 @@ def load_baseline(filename):
 
 
 def compare_baseline(old_baseline, new_baseline):
-    if old_baseline is None:
-        print(f"No {old_baseline} found. Creating new baseline file")
-        #### create new baseline file
+    results = {"new": [], "modified": [], "deleted": []}
 
-    #### change prints to return dictionaries
+    if old_baseline is None:
+        return results
+        # print(f"No {old_baseline} found. Creating new baseline file")
+
     for path in new_baseline:
         if path not in old_baseline:
-            print(f"New: {path}")
+            results["new"].append(path)
+            # print(f"New: {path}")
         elif new_baseline[path] != old_baseline[path]:
-            print(f"Modified: {path}")
+            results["modified"].append(path)
+            # print(f"Modified: {path}")
 
     for path in old_baseline:
         if path not in new_baseline:
-            print(f"Deleted: {path}")
+            results["deleted"].append(path)
+            # print(f"Deleted: {path}")
+
+    return results
