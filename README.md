@@ -7,12 +7,12 @@ file changes, deletions or additions are detected, user will be notified.
 
 ### To-do:
 Core logic
-- Hashing engine
-- Recursive walker
-- Baseline tracker
+- ~~Hashing engine~~
+- ~~Recursive walker~~
+- ~~Baseline tracker~~
 
 Comparison engine
-- Audit function
+- ~~Audit function~~
 - State detection
 - Logging
 
@@ -20,7 +20,7 @@ Real-time monitoring
 - Watchdog integration
 
 CLI
-- Command-line interface
+- ~~Command-line interface~~
 - Output formatting
 
 Error handling & testing
