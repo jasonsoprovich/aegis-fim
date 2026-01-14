@@ -26,6 +26,8 @@ def set_baseline(directory):
     baseline = {}
     for root, _, files in os.walk(directory):
         for file in files:
+            if file == ".DS_store":
+                continue
             abs_path = os.path.abspath(os.path.join(root, file))
             file_hash = calc_sha256(abs_path)
             baseline[abs_path] = file_hash

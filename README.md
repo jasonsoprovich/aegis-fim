@@ -14,7 +14,7 @@ Core logic
 Comparison engine
 - ~~Audit function~~
 - State detection
-- Logging
+- ~~Logging~~
 
 Real-time monitoring
 - Watchdog integration
