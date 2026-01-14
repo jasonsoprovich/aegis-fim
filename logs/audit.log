@@ -1,0 +1,5 @@
+2026-01-13 22:58:24,860 [INFO] No changes detected. Integrity verified.
+2026-01-13 22:58:28,668 [INFO] No changes detected. Integrity verified.
+2026-01-13 22:58:45,767 [INFO] No changes detected. Integrity verified.
+2026-01-13 22:59:46,003 [WARNING] [NEW] /Users/jasonsoprovich/repos/github.com/jasonsoprovich/aegis-fim/test_dir/temp/new_file.txt
+2026-01-13 22:59:46,003 [WARNING] [MODIFIED] /Users/jasonsoprovich/repos/github.com/jasonsoprovich/aegis-fim/test_dir/temp/empty_doc.txt

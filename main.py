@@ -1,8 +1,16 @@
 import argparse
 import json
+import logging
 import os
 
 from hash_engine import compare_baseline, load_baseline, save_baseline, set_baseline
+
+os.makedirs("./logs", exist_ok=True)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[logging.FileHandler("./logs/audit.log"), logging.StreamHandler()],
+)
 
 
 def main():
@@ -46,14 +54,14 @@ def main():
         has_changes = changes["new"] or changes["modified"] or changes["deleted"]
 
         if not has_changes:
-            print("No changes detected. Integrity verified.")
+            logging.info("No changes detected. Integrity verified.")
         else:
             for path in changes["new"]:
-                print(f"[NEW] {path}")
+                logging.warning(f"[NEW] {path}")
             for path in changes["modified"]:
-                print(f"[MODIFIED] {path}")
+                logging.warning(f"[MODIFIED] {path}")
             for path in changes["deleted"]:
-                print(f"[DELETED] {path}")
+                logging.warning(f"[DELETED] {path}")
 
             if update_mode:
                 confirm = input(
