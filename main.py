@@ -74,6 +74,17 @@ def main():
             for path in changes["deleted"]:
                 logging.warning(f"[DELETED] {path}")
 
+            new_count = len(changes["new"])
+            mod_count = len(changes["modified"])
+            del_count = len(changes["deleted"])
+            total_files = len(current_scan)
+
+            logging.info(f"Scan complete. Total files checked: {total_files}")
+            if has_changes:
+                logging.info(
+                    f"Summary: {new_count} New, {mod_count} Modified, {del_count} Deleted."
+                )
+
             if update_mode:
                 confirm = input(
                     "\nChanges detected. Would you like to update the baseline? (y/n): "
