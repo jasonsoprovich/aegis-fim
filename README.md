@@ -61,7 +61,7 @@ python3 main.py /path/to/monitor -b ./data/my_baseline.json -u
 - [x] **Logging System:** Persistent audit logs in `./logs/audit.log`.
 
 ### In Progress
-- [ ] **Exclusion Logic:** Prevent monitoring the baseline/data folder to avoid recursive loops.
+- [x] **Exclusion Logic:** Prevent monitoring the baseline/data folder to avoid recursive loops.
 - [ ] **Summary Statistics:** Display total file counts and change totals at the end of a scan.
 - [ ] **Real-time Monitoring:** Integrate `watchdog` for instant change detection.
 - [ ] **TUI (Terminal User Interface):** Implement `rich` for a professional, dashboard-style interface.

@@ -20,13 +20,19 @@ def main():
         "-b",
         "--baseline",
         default="./data/baseline.json",
-        help="The path to baseline file",
+        help="Baseline storage file (JSON)",
     )
     parser.add_argument(
         "-u",
         "--update",
         action="store_true",
         help="Update baseline if changes are detected",
+    )
+    parser.add_argument(
+        "-i",
+        "--ignore",
+        nargs="+",
+        help="Space-separated list of files or directories to ignore",
     )
 
     args = parser.parse_args()
@@ -35,12 +41,17 @@ def main():
     baseline_filename = args.baseline
     update_mode = args.update
 
+    default_ignores = ["logs", "data", ".DS_Store", ".git"]
+    default_ignores.append(os.path.basename(baseline_filename))
+    if args.ignore:
+        default_ignores.extend(args.ignore)
+
     if not os.path.exists(target):
         print(f"Directory {target} not found.")
         return
 
     print(f"Scanning: {target}.")
-    current_scan = set_baseline(target)
+    current_scan = set_baseline(target, default_ignores)
     old_baseline = load_baseline(baseline_filename)
 
     if old_baseline is None:

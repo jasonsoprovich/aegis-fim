@@ -22,15 +22,26 @@ def calc_sha256(filepath):
         return None
 
 
-def set_baseline(directory):
+def set_baseline(directory, ignore_list=None):
+    if ignore_list is None:
+        ignore_list = []
+
     baseline = {}
-    for root, _, files in os.walk(directory):
+    for root, dirs, files in os.walk(directory):
+        dirs[:] = [d for d in dirs if d not in ignore_list]
+
         for file in files:
-            if file == ".DS_store":
+            if file in ignore_list:
                 continue
+
             abs_path = os.path.abspath(os.path.join(root, file))
+
+            if any(ignored in abs_path for ignored in ignore_list):
+                continue
+
             file_hash = calc_sha256(abs_path)
-            baseline[abs_path] = file_hash
+            if file_hash:
+                baseline[abs_path] = file_hash
 
     return baseline
 
