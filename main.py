@@ -6,7 +6,7 @@ from rich.logging import RichHandler
 
 from data_manager import load_baseline, save_baseline
 from hash_engine import compare_baseline, set_baseline
-from ui import display_header, display_results
+from ui import display_header, display_results, display_summary, status_update
 
 os.makedirs("./logs", exist_ok=True)
 logging.basicConfig(
@@ -59,8 +59,9 @@ def main():
         print(f"Directory {target} not found.")
         return
 
-    print(f"Scanning: {target}.")
-    current_scan = set_baseline(target, default_ignores)
+    logging.info(f"Scanning: {target}.")
+    with status_update("[bold green]Hashing files..."):
+        current_scan = set_baseline(target, default_ignores)
     old_baseline = load_baseline(baseline_filename)
 
     if old_baseline is None:
@@ -68,7 +69,7 @@ def main():
         save_baseline(current_scan, baseline_filename)
         print("Baseline established. Run again to scan for changes.")
     else:
-        print("Existing baseline found. Comparing files.")
+        logging.info("Existing baseline found. Comparing files.")
         changes = compare_baseline(old_baseline, current_scan)
 
         has_changes = changes["new"] or changes["modified"] or changes["deleted"]
@@ -90,11 +91,13 @@ def main():
             del_count = len(changes["deleted"])
             total_files = len(current_scan)
 
-            logging.info(f"Scan complete. Total files checked: {total_files}")
-            if has_changes:
-                logging.info(
-                    f"Summary: {new_count} New, {mod_count} Modified, {del_count} Deleted."
-                )
+            # logging.info(f"Scan complete. Total files checked: {total_files}")
+            display_summary(total_files, new_count, mod_count, del_count)
+
+            # if has_changes:
+            #     logging.info(
+            #         f"Summary: {new_count} New, {mod_count} Modified, {del_count} Deleted."
+            #     )
 
             if update_mode:
                 confirm = input(

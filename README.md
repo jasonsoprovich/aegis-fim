@@ -62,9 +62,9 @@ python3 main.py /path/to/monitor -b ./data/my_baseline.json -u
 
 ### In Progress
 - [x] **Exclusion Logic:** Prevent monitoring the baseline/data folder to avoid recursive loops.
-- [ ] **Summary Statistics:** Display total file counts and change totals at the end of a scan.
+- [x] **Summary Statistics:** Display total file counts and change totals at the end of a scan.
 - [ ] **Real-time Monitoring:** Integrate `watchdog` for instant change detection.
-- [ ] **TUI (Terminal User Interface):** Implement `rich` for a professional, dashboard-style interface.
+- [x] **TUI (Terminal User Interface):** Implement `rich` for a professional, dashboard-style interface.
 
 ### Future Goals (V2)
 - [ ] **Report Generation:** Export scan results to HTML/Markdown.
@@ -75,5 +75,5 @@ python3 main.py /path/to/monitor -b ./data/my_baseline.json -u
 
 ## Tech Stack
 - **Language:** Python 3.x
-- **Libraries:** `hashlib`, `json`, `os`, `argparse`, `logging`
-- **Upcoming Libraries:** `watchdog`, `rich`
+- **Libraries:** `hashlib`, `json`, `os`, `argparse`, `logging`, `rich`
+- **Upcoming Libraries:** `watchdog`
