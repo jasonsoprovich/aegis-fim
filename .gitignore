@@ -3,3 +3,4 @@ hash_reference.py
 __pycache__
 data/
 logs/
+venv/
