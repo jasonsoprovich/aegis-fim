@@ -4,6 +4,7 @@ import logging
 import os
 
 from hash_engine import compare_baseline, load_baseline, save_baseline, set_baseline
+from ui import display_header
 
 os.makedirs("./logs", exist_ok=True)
 logging.basicConfig(
@@ -14,6 +15,8 @@ logging.basicConfig(
 
 
 def main():
+    display_header()
+
     parser = argparse.ArgumentParser(description="Aegis File Integrity Monitor")
     parser.add_argument("path", help="The directory to monitor")
     parser.add_argument(
