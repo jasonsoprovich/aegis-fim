@@ -4,7 +4,7 @@ import os
 
 from data_manager import load_baseline, save_baseline
 from hash_engine import compare_baseline, set_baseline
-from ui import display_header
+from ui import display_header, display_results
 
 os.makedirs("./logs", exist_ok=True)
 logging.basicConfig(
@@ -70,6 +70,8 @@ def main():
         if not has_changes:
             logging.info("No changes detected. Integrity verified.")
         else:
+            display_results(changes)
+
             for path in changes["new"]:
                 logging.warning(f"[NEW] {path}")
             for path in changes["modified"]:
