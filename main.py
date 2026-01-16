@@ -2,6 +2,8 @@ import argparse
 import logging
 import os
 
+from rich.logging import RichHandler
+
 from data_manager import load_baseline, save_baseline
 from hash_engine import compare_baseline, set_baseline
 from ui import display_header, display_results
@@ -9,8 +11,12 @@ from ui import display_header, display_results
 os.makedirs("./logs", exist_ok=True)
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[logging.FileHandler("./logs/audit.log"), logging.StreamHandler()],
+    format="%(message)s",
+    datefmt="[%X]",
+    handlers=[
+        logging.FileHandler("./logs/audit.log"),
+        RichHandler(rich_tracebacks=True),
+    ],
 )
 
 
@@ -72,12 +78,12 @@ def main():
         else:
             display_results(changes)
 
-            for path in changes["new"]:
-                logging.warning(f"[NEW] {path}")
-            for path in changes["modified"]:
-                logging.warning(f"[MODIFIED] {path}")
-            for path in changes["deleted"]:
-                logging.warning(f"[DELETED] {path}")
+            # for path in changes["new"]:
+            #     logging.warning(f"[NEW] {path}")
+            # for path in changes["modified"]:
+            #     logging.warning(f"[MODIFIED] {path}")
+            # for path in changes["deleted"]:
+            #     logging.warning(f"[DELETED] {path}")
 
             new_count = len(changes["new"])
             mod_count = len(changes["modified"])
