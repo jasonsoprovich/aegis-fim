@@ -1,9 +1,9 @@
 import argparse
-import json
 import logging
 import os
 
-from hash_engine import compare_baseline, load_baseline, save_baseline, set_baseline
+from data_manager import load_baseline, save_baseline
+from hash_engine import compare_baseline, set_baseline
 from ui import display_header
 
 os.makedirs("./logs", exist_ok=True)
@@ -95,10 +95,6 @@ def main():
                 if confirm.lower() == "y":
                     save_baseline(current_scan, baseline_filename)
                     print("Baseline updated.")
-
-
-def print_output(output):
-    print(json.dumps(output, indent=4))
 
 
 if __name__ == "__main__":

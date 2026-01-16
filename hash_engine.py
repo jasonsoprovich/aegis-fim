@@ -1,14 +1,5 @@
 import hashlib
-import json
 import os
-
-# def list_files_recursively(path="."):
-#     for entry in os.listdir(path):
-#         full_path = os.path.join(path, entry)
-#         if os.path.isdir(full_path):
-#             list_files_recursively(full_path)
-#         else:
-#             print(full_path)
 
 
 def calc_sha256(filepath):
@@ -44,20 +35,6 @@ def set_baseline(directory, ignore_list=None):
                 baseline[abs_path] = file_hash
 
     return baseline
-
-
-def save_baseline(data, filename):
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=4)
-
-
-def load_baseline(filename):
-    if not os.path.exists(filename):
-        return None
-
-    with open(filename, "r") as f:
-        data = json.load(f)
-        return data
 
 
 def compare_baseline(old_baseline, new_baseline):
