@@ -42,19 +42,15 @@ def compare_baseline(old_baseline, new_baseline):
 
     if old_baseline is None:
         return results
-        # print(f"No {old_baseline} found. Creating new baseline file")
 
     for path in new_baseline:
         if path not in old_baseline:
             results["new"].append(path)
-            # print(f"New: {path}")
         elif new_baseline[path] != old_baseline[path]:
             results["modified"].append(path)
-            # print(f"Modified: {path}")
 
     for path in old_baseline:
         if path not in new_baseline:
             results["deleted"].append(path)
-            # print(f"Deleted: {path}")
 
     return results

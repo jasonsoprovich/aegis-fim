@@ -79,25 +79,12 @@ def main():
         else:
             display_results(changes)
 
-            # for path in changes["new"]:
-            #     logging.warning(f"[NEW] {path}")
-            # for path in changes["modified"]:
-            #     logging.warning(f"[MODIFIED] {path}")
-            # for path in changes["deleted"]:
-            #     logging.warning(f"[DELETED] {path}")
-
             new_count = len(changes["new"])
             mod_count = len(changes["modified"])
             del_count = len(changes["deleted"])
             total_files = len(current_scan)
 
-            # logging.info(f"Scan complete. Total files checked: {total_files}")
             display_summary(total_files, new_count, mod_count, del_count)
-
-            # if has_changes:
-            #     logging.info(
-            #         f"Summary: {new_count} New, {mod_count} Modified, {del_count} Deleted."
-            #     )
 
             if update_mode:
                 confirm = input(
