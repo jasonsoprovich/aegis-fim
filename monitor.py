@@ -71,7 +71,7 @@ def start_realtime_monitor(target_path, baseline, ignores):
     observer.schedule(event_handler, target_path, recursive=True)
     observer.start()
 
-    logging, info(f"Real-time monitoring active on: {target_path}")
+    logging.info(f"Real-time monitoring active on: {target_path}")
     logging.info("Press Ctrl-C to stop.")
 
     try:
