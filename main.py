@@ -43,6 +43,12 @@ def main():
         nargs="+",
         help="Space-separated list of files or directories to ignore",
     )
+    parser.add_argument(
+        "-w",
+        "--watch",
+        action="store_true",
+        help="Enable real-time monitoring",
+    )
 
     args = parser.parse_args()
 
@@ -93,6 +99,11 @@ def main():
                 if confirm.lower() == "y":
                     save_baseline(current_scan, baseline_filename)
                     print("Baseline updated.")
+
+            if args.watch:
+                from monitor import start_realtime_monitor
+
+                start_realtime_monitor(target, current_scan, default_ignores)
 
 
 if __name__ == "__main__":
