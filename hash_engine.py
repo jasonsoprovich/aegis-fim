@@ -9,7 +9,10 @@ def calc_sha256(filepath):
             for byte_block in iter(lambda: f.read(4096), b""):
                 sha256_hash.update(byte_block)
         return sha256_hash.hexdigest()
-    except (PermissionError, FileNotFoundError):
+    except (PermissionError, FileNotFoundError, IOError) as e:
+        import logging
+
+        logging.warning(f"Could not hash {filepath}: {e}")
         return None
 
 
@@ -18,6 +21,8 @@ def set_baseline(directory, ignore_list=None):
         ignore_list = []
 
     baseline = {}
+    directory = os.path.abspath(directory)
+
     for root, dirs, files in os.walk(directory):
         dirs[:] = [d for d in dirs if d not in ignore_list]
 
