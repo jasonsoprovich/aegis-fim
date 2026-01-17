@@ -3,14 +3,21 @@ import os
 
 
 def save_baseline(data, filename):
-    with open(filename, "w") as f:
-        json.dump(data, f, indent=4)
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+
+    try:
+        with open(filename, "w") as f:
+            json.dump(data, f, indent=4)
+    except IOError as e:
+        raise IOError(f"Failed to save baseline: {e}")
 
 
 def load_baseline(filename):
     if not os.path.exists(filename):
         return None
 
-    with open(filename, "r") as f:
-        data = json.load(f)
-        return data
+    try:
+        with open(filename, "r") as f:
+            return json.load(f)
+    except (IOError, json.JSONDecodeError) as e:
+        raise IOError(f"Failed to load baseline: {e}")
