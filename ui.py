@@ -14,7 +14,7 @@ def status_update(message):
 
 def display_header():
     header_text = Text("AEGIS - File Integrity Monitor", style="bold cyan")
-    console.print(Panel(header_text, subtitle="v0.1.1", expand=False))
+    console.print(Panel(header_text, subtitle="v0.1.2", expand=False))
 
 
 def display_results(changes):
