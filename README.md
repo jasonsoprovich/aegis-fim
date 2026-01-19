@@ -143,7 +143,7 @@ python3 main.py /path/to/monitor -b ./custom.json -i logs temp -w
 - [x] **TUI (Terminal User Interface):** Implement `rich` for a professional, dashboard-style interface.
 
 ### In Progress
-- [ ] **Progress Indicators:** Show progress bar during large scans
+- [x] **Progress Indicators:** Show progress bar during large scans
 - [ ] **Metadata Tracking:** Track file size, timestamps, and permissions
 - [ ] **Error Summary:** Display files that couldn't be scanned with reasons
 - [ ] **Dry-Run Mode:** Preview baseline updates without applying them
