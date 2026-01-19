@@ -73,7 +73,7 @@ def main():
     logging.info(f"Scanning: {target}.")
 
     with create_scan_progress() as progress:
-        task = progress.add_task("[cyan] Hashing files...", total=0)
+        task = progress.add_task("[cyan]Hashing files...", total=0)
         current_scan = set_baseline(target, default_ignores, progress, task)
 
     old_baseline = load_baseline(baseline_filename)
