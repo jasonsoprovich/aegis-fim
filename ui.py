@@ -2,6 +2,13 @@ import os
 
 from rich.console import Console
 from rich.panel import Panel
+from rich.progress import (
+    BarColumn,
+    Progress,
+    TaskProgressColumn,
+    TextColumn,
+    TimeRemainingColumn,
+)
 from rich.table import Table
 from rich.text import Text
 
@@ -12,9 +19,23 @@ def status_update(message):
     return console.status(message, spinner="dots")
 
 
+def create_scan_progress():
+    return Progress(
+        TextColumn("[bold blue]{task.description}"),
+        BarColumn(complete_style="cyan", finished_style="green"),
+        TaskProgressColumn(),
+        TimeRemainingColumn(),
+        console=console,
+    )
+
+
+def display_comparison_status():
+    console.print("\n[bold blue] Analyzing changes...[/]")
+
+
 def display_header():
     header_text = Text("AEGIS - File Integrity Monitor", style="bold cyan")
-    console.print(Panel(header_text, subtitle="v0.1.2", expand=False))
+    console.print(Panel(header_text, subtitle="v0.1.3", expand=False))
 
 
 def display_results(changes):

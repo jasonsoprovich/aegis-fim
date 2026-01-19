@@ -6,7 +6,12 @@ from rich.logging import RichHandler
 
 from data_manager import load_baseline, save_baseline
 from hash_engine import compare_baseline, set_baseline
-from ui import display_header, display_results, display_summary, status_update
+from ui import (
+    create_scan_progress,
+    display_header,
+    display_results,
+    display_summary,
+)
 
 os.makedirs("./logs", exist_ok=True)
 logging.basicConfig(
@@ -66,8 +71,11 @@ def main():
         return
 
     logging.info(f"Scanning: {target}.")
-    with status_update("[bold green]Hashing files..."):
-        current_scan = set_baseline(target, default_ignores)
+
+    with create_scan_progress() as progress:
+        task = progress.add_task("[cyan] Hashing files...", total=0)
+        current_scan = set_baseline(target, default_ignores, progress, task)
+
     old_baseline = load_baseline(baseline_filename)
 
     if old_baseline is None:

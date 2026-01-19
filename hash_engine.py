@@ -16,12 +16,24 @@ def calc_sha256(filepath):
         return None
 
 
-def set_baseline(directory, ignore_list=None):
+def set_baseline(directory, ignore_list=None, progress=None, task=None):
     if ignore_list is None:
         ignore_list = []
 
     baseline = {}
     directory = os.path.abspath(directory)
+
+    total_files = 0
+    if progress is not None and task is not None:
+        for root, dirs, files in os.walk(directory):
+            dirs[:] = [d for d in dirs if d not in ignore_list]
+            for file in files:
+                if file in ignore_list:
+                    continue
+                abs_path = os.path.abspath(os.path.join(root, file))
+                if not any(ignored in abs_path for ignored in ignore_list):
+                    total_files += 1
+        progress.update(task, total=total_files)
 
     for root, dirs, files in os.walk(directory):
         dirs[:] = [d for d in dirs if d not in ignore_list]
@@ -38,6 +50,9 @@ def set_baseline(directory, ignore_list=None):
             file_hash = calc_sha256(abs_path)
             if file_hash:
                 baseline[abs_path] = file_hash
+
+                if progress is not None and task is not None:
+                    progress.update(task, advance=1)
 
     return baseline
 
