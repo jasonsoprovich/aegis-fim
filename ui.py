@@ -40,29 +40,47 @@ def display_header():
 
 def display_results(changes):
     table = Table(title="Security Audit Results", header_style="bold magenta")
-    table.add_column("Status", width=12)
+    table.add_column("Status", width=15)
     table.add_column("File Path")
+    table.add_column("Details", width=30)
 
     def get_short_path(p):
         return os.path.relpath(p, os.getcwd())
 
     for path in changes["new"]:
-        table.add_row("NEW", get_short_path(path), style="green")
+        table.add_row("NEW", get_short_path(path), "", style="green")
     for path in changes["modified"]:
-        table.add_row("MODIFIED", get_short_path(path), style="yellow")
+        table.add_row(
+            "MODIFIED", get_short_path(path), "Content changes", style="yellow"
+        )
+
+    for item in changes["metadata_changed"]:
+        path = item["path"]
+        details = []
+        if item["old_size"] != item["new_size"]:
+            details.append(f"Size: {item['old_size']}->{item['new_size']}")
+        if item["old_permissions"] != item["new_permissions"]:
+            details.append(
+                f"Permissions: {item['old_permissions']}->{item['new_permissions']}"
+            )
+        table.add_row(
+            "METADATA", get_short_path(path), ", ".join(details), style="cyan"
+        )
+
     for path in changes["deleted"]:
-        table.add_row("DELETED", get_short_path(path), style="red")
+        table.add_row("DELETED", get_short_path(path), "", style="red")
 
     console.print(table)
 
 
-def display_summary(total, new, modified, deleted):
+def display_summary(total, new, modified, deleted, metadata=0):
     table = Table(show_header=True, header_style="bold blue", box=None)
     table.add_column("Total Files", justify="center")
     table.add_column("New", style="green", justify="center")
     table.add_column("Modified", style="yellow", justify="center")
+    table.add_column("Metadata", style="cyan", justify="center")
     table.add_column("Deleted", style="red", justify="center")
 
-    table.add_row(str(total), str(new), str(modified), str(deleted))
+    table.add_row(str(total), str(new), str(modified), str(metadata), str(deleted))
 
     console.print(Panel(table, title="Scan Summary", expand=False))

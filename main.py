@@ -86,7 +86,12 @@ def main():
         logging.info("Existing baseline found. Comparing files.")
         changes = compare_baseline(old_baseline, current_scan)
 
-        has_changes = changes["new"] or changes["modified"] or changes["deleted"]
+        has_changes = (
+            changes["new"]
+            or changes["modified"]
+            or changes["deleted"]
+            or changes["metadata_changed"]
+        )
 
         if not has_changes:
             logging.info("No changes detected. Integrity verified.")
@@ -96,9 +101,10 @@ def main():
             new_count = len(changes["new"])
             mod_count = len(changes["modified"])
             del_count = len(changes["deleted"])
+            meta_count = len(changes["metadata_changed"])
             total_files = len(current_scan)
 
-            display_summary(total_files, new_count, mod_count, del_count)
+            display_summary(total_files, new_count, mod_count, del_count, meta_count)
 
             if update_mode:
                 confirm = input(

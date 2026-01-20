@@ -2,6 +2,26 @@ import hashlib
 import os
 
 
+def get_file_info(filepath):
+    try:
+        stats = os.stat(filepath)
+        sha256_hash = hashlib.sha256()
+        with open(filepath, "rb") as f:
+            for byte_block in iter(lambda: f.read(4096), b""):
+                sha256_hash.update(byte_block)
+        return {
+            "hash": sha256_hash.hexdigest(),
+            "size": stats.st_size,
+            "mtime": stats.st_mtime,
+            "permissions": oct(stats.st_mode)[-3:],
+        }
+    except (PermissionError, FileNotFoundError, IOError) as e:
+        import logging
+
+        logging.warning(f"Could not process {filepath}: {e}")
+        return None
+
+
 def calc_sha256(filepath):
     sha256_hash = hashlib.sha256()
     try:
@@ -47,7 +67,7 @@ def set_baseline(directory, ignore_list=None, progress=None, task=None):
             if any(ignored in abs_path for ignored in ignore_list):
                 continue
 
-            file_hash = calc_sha256(abs_path)
+            file_hash = get_file_info(abs_path)
             if file_hash:
                 baseline[abs_path] = file_hash
 
@@ -58,7 +78,7 @@ def set_baseline(directory, ignore_list=None, progress=None, task=None):
 
 
 def compare_baseline(old_baseline, new_baseline):
-    results = {"new": [], "modified": [], "deleted": []}
+    results = {"new": [], "modified": [], "deleted": [], "metadata_changed": []}
 
     if old_baseline is None:
         return results
@@ -66,8 +86,26 @@ def compare_baseline(old_baseline, new_baseline):
     for path in new_baseline:
         if path not in old_baseline:
             results["new"].append(path)
-        elif new_baseline[path] != old_baseline[path]:
-            results["modified"].append(path)
+
+        else:
+            old_info = old_baseline[path]
+            new_info = new_baseline[path]
+
+            if new_info["hash"] != old_info["hash"]:
+                results["modified"].append(path)
+            elif (
+                new_info["size"] != old_info["size"]
+                or new_info["permissions"] != old_info["permissions"]
+            ):
+                results["metadata_changed"].append(
+                    {
+                        "path": path,
+                        "old_size": old_info["size"],
+                        "new_size": new_info["size"],
+                        "old_permissions": old_info["permissions"],
+                        "new_permissions": new_info["permissions"],
+                    }
+                )
 
     for path in old_baseline:
         if path not in new_baseline:
