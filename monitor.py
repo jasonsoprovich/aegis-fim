@@ -5,7 +5,7 @@ import time
 from watchdog.events import FileSystemEventHandler
 from watchdog.observers import Observer
 
-from hash_engine import calc_sha256
+from hash_engine import get_file_info
 
 
 class AegisHandler(FileSystemEventHandler):
@@ -27,17 +27,21 @@ class AegisHandler(FileSystemEventHandler):
             return
 
         abs_path = os.path.abspath(event.src_path)
-        new_hash = calc_sha256(abs_path)
+        file_info = get_file_info(abs_path)
 
-        if new_hash is None:
+        if file_info is None:
             return
 
-        old_hash = self.baseline.get(abs_path)
+        old_info = self.baseline.get(abs_path)
 
-        if new_hash != old_hash:
+        if not old_info or (
+            file_info["hash"] != old_info["hash"]
+            or file_info["permissions"] != old_info["permissions"]
+            or file_info["size"] != old_info["size"]
+        ):
             rel_path = os.path.relpath(abs_path)
             logging.warning(f"[WATCHER] MODIFIED: {rel_path}")
-            self.baseline[abs_path] = new_hash
+            self.baseline[abs_path] = file_info
 
     def on_created(self, event):
         if event.is_directory or self.is_ignored(event.src_path):
@@ -48,9 +52,9 @@ class AegisHandler(FileSystemEventHandler):
 
         logging.warning(f"[WATCHER] CREATED: {rel_path}")
 
-        new_hash = calc_sha256(abs_path)
-        if new_hash:
-            self.baseline[abs_path] = new_hash
+        file_info = get_file_info(abs_path)
+        if file_info:
+            self.baseline[abs_path] = file_info
 
     def on_deleted(self, event):
         if event.is_directory or self.is_ignored(event.src_path):
