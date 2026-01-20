@@ -144,7 +144,7 @@ python3 main.py /path/to/monitor -b ./custom.json -i logs temp -w
 
 ### In Progress
 - [x] **Progress Indicators:** Show progress bar during large scans
-- [ ] **Metadata Tracking:** Track file size, timestamps, and permissions
+- [x] **Metadata Tracking:** Track file size, timestamps, and permissions
 - [ ] **Error Summary:** Display files that couldn't be scanned with reasons
 - [ ] **Dry-Run Mode:** Preview baseline updates without applying them
 - [ ] **Verbose Mode:** Optional detailed output of all scanned files
