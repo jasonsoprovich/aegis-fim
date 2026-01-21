@@ -54,12 +54,19 @@ def main():
         action="store_true",
         help="Enable real-time monitoring",
     )
+    parser.add_argument(
+        "-d",
+        "--dry-run",
+        action="store_true",
+        help="Show what would happen without saving any changes to the baseline",
+    )
 
     args = parser.parse_args()
 
     target = args.path
     baseline_filename = args.baseline
     update_mode = args.update
+    dry_run = args.dry_run
 
     default_ignores = ["logs", "data", ".DS_Store", ".git"]
     default_ignores.append(os.path.basename(baseline_filename))
@@ -79,9 +86,14 @@ def main():
     old_baseline = load_baseline(baseline_filename)
 
     if old_baseline is None:
-        print("First run detected. Saving baseline.")
-        save_baseline(current_scan, baseline_filename)
-        print("Baseline established. Run again to scan for changes.")
+        if dry_run:
+            print(
+                "[DRY RUN] First run detected. Baseline would be saved, but write-access is disabled."
+            )
+        else:
+            print("First run detected. Saving baseline.")
+            save_baseline(current_scan, baseline_filename)
+            print("Baseline established. Run again to scan for changes.")
     else:
         logging.info("Existing baseline found. Comparing files.")
         changes = compare_baseline(old_baseline, current_scan)
@@ -107,12 +119,17 @@ def main():
             display_summary(total_files, new_count, mod_count, del_count, meta_count)
 
             if update_mode:
-                confirm = input(
-                    "\nChanges detected. Would you like to update the baseline? (y/n): "
-                )
-                if confirm.lower() == "y":
-                    save_baseline(current_scan, baseline_filename)
-                    print("Baseline updated.")
+                if dry_run:
+                    print(
+                        "\n[DRY RUN] Changes detected. Baseline update requested, but write-access is disabled."
+                    )
+                else:
+                    confirm = input(
+                        "\nChanges detected. Would you like to update the baseline? (y/n): "
+                    )
+                    if confirm.lower() == "y":
+                        save_baseline(current_scan, baseline_filename)
+                        print("Baseline updated.")
 
         if args.watch:
             from monitor import start_realtime_monitor
