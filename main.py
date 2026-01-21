@@ -29,36 +29,36 @@ def main():
     display_header()
 
     parser = argparse.ArgumentParser(description="Aegis File Integrity Monitor")
-    parser.add_argument("path", help="The directory to monitor")
+    parser.add_argument("path", help="Target directory for integrity analysis")
     parser.add_argument(
         "-b",
         "--baseline",
         default="./data/baseline.json",
-        help="Baseline storage file (JSON)",
+        help="Path to the baseline storage file (default: ./data/baseline.json)",
     )
     parser.add_argument(
         "-u",
         "--update",
         action="store_true",
-        help="Update baseline if changes are detected",
+        help="Interactively update the baseline if discrepancies are identified",
     )
     parser.add_argument(
         "-i",
         "--ignore",
         nargs="+",
-        help="Space-separated list of files or directories to ignore",
+        help="List of filenames or directory patterns to exclude from the audit",
     )
     parser.add_argument(
         "-w",
         "--watch",
         action="store_true",
-        help="Enable real-time monitoring",
+        help="Enable persistent real-time filesystem monitoring",
     )
     parser.add_argument(
         "-d",
         "--dry-run",
         action="store_true",
-        help="Show what would happen without saving any changes to the baseline",
+        help="Preview changes without modifying the stored baseline",
     )
 
     args = parser.parse_args()
@@ -87,49 +87,43 @@ def main():
 
     if old_baseline is None:
         if dry_run:
-            print(
-                "[DRY RUN] First run detected. Baseline would be saved, but write-access is disabled."
+            logging.info(
+                "[DRY RUN] Initial state captured. Baseline write-back skipped."
             )
         else:
-            print("First run detected. Saving baseline.")
+            logging.info("Initial run: Establishing cryptographic baseline.")
             save_baseline(current_scan, baseline_filename)
-            print("Baseline established. Run again to scan for changes.")
     else:
-        logging.info("Existing baseline found. Comparing files.")
+        logging.info("Baseline loaded. Commencing integrity comparison.")
         changes = compare_baseline(old_baseline, current_scan)
 
-        has_changes = (
-            changes["new"]
-            or changes["modified"]
-            or changes["deleted"]
-            or changes["metadata_changed"]
-        )
+        has_changes = any(changes.values())
 
         if not has_changes:
-            logging.info("No changes detected. Integrity verified.")
+            logging.info("Integrity Verified: No unauthorized changes detected.")
         else:
             display_results(changes)
 
-            new_count = len(changes["new"])
-            mod_count = len(changes["modified"])
-            del_count = len(changes["deleted"])
-            meta_count = len(changes["metadata_changed"])
-            total_files = len(current_scan)
-
-            display_summary(total_files, new_count, mod_count, del_count, meta_count)
+            display_summary(
+                len(current_scan),
+                len(changes["new"]),
+                len(changes["modified"]),
+                len(changes["deleted"]),
+                len(changes["metadata_changed"]),
+            )
 
             if update_mode:
                 if dry_run:
-                    print(
-                        "\n[DRY RUN] Changes detected. Baseline update requested, but write-access is disabled."
+                    logging.info(
+                        "[DRY RUN] Update requested. Disk write-back suppressed."
                     )
                 else:
                     confirm = input(
-                        "\nChanges detected. Would you like to update the baseline? (y/n): "
+                        "\nDiscrepancies found. Synchronize baseline with current state? (y/n):"
                     )
                     if confirm.lower() == "y":
                         save_baseline(current_scan, baseline_filename)
-                        print("Baseline updated.")
+                        logging.info("Baseline successfully synchronized.")
 
         if args.watch:
             from monitor import start_realtime_monitor
