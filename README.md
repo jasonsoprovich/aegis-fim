@@ -141,12 +141,12 @@ python3 main.py /path/to/monitor -b ./custom.json -i logs temp -w
 - [x] **Summary Statistics:** Display total file counts and change totals at the end of a scan.
 - [x] **Real-time Monitoring:** Integrate `watchdog` for instant change detection.
 - [x] **TUI (Terminal User Interface):** Implement `rich` for a professional, dashboard-style interface.
-
-### In Progress
 - [x] **Progress Indicators:** Show progress bar during large scans
 - [x] **Metadata Tracking:** Track file size, timestamps, and permissions
-- [ ] **Error Summary:** Display files that couldn't be scanned with reasons
-- [ ] **Dry-Run Mode:** Preview baseline updates without applying them
+- [x] **Dry-Run Mode:** Preview baseline updates without applying them
+- [x] **Error Summary:** Display files that couldn't be scanned with reasons
+
+### In Progress
 - [ ] **Verbose Mode:** Optional detailed output of all scanned files
 - [ ] **Export Results:** Save scan results to JSON for audit trails
 - [ ] **Config File Support:** YAML/JSON config for easier repeated scans

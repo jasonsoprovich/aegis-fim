@@ -8,6 +8,7 @@ from data_manager import load_baseline, save_baseline
 from hash_engine import compare_baseline, set_baseline
 from ui import (
     create_scan_progress,
+    display_errors,
     display_header,
     display_results,
     display_summary,
@@ -80,8 +81,13 @@ def main():
     logging.info(f"Scanning: {target}.")
 
     with create_scan_progress() as progress:
-        task = progress.add_task("[cyan]Hashing files...", total=0)
-        current_scan = set_baseline(target, default_ignores, progress, task)
+        task = progress.add_task("[cyan]Auditing integrity...", total=0)
+        current_scan, scan_errors = set_baseline(
+            target, default_ignores, progress, task
+        )
+
+    if scan_errors:
+        display_errors(scan_errors)
 
     old_baseline = load_baseline(baseline_filename)
 

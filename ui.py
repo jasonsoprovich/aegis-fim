@@ -29,6 +29,23 @@ def create_scan_progress():
     )
 
 
+def display_errors(errors):
+    if not errors:
+        return
+
+    table = Table(title="Scan Failures", header_style="bold red", border_style="red")
+    table.add_column("File Path")
+    table.add_column("Reason")
+
+    for path, reason in errors.items():
+        table.add_row(os.path.relpath(path), reason)
+
+    console.print("\n")
+    console.print(
+        Panel(table, title="[bold red]Warning: Skipped Files[/]", expand=False)
+    )
+
+
 def display_comparison_status():
     console.print("\n[bold blue] Analyzing changes...[/]")
 

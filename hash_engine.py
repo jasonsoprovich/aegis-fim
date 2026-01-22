@@ -15,17 +15,17 @@ def get_file_info(filepath):
             "size": stats.st_size,
             "mtime": stats.st_mtime,
             "permissions": format(stats.st_mode & 0o777, "03o"),
-        }
+        }, None
     except (PermissionError, FileNotFoundError, IOError) as e:
-        logging.warning(f"Could not process {filepath}: {e}")
-        return None
+        error_msg = str(e)
+        logging.warning(f"Could not process {filepath}: {error_msg}")
+        return None, error_msg
 
 
 def set_baseline(directory, ignore_list=None, progress=None, task=None):
     if ignore_list is None:
         ignore_list = []
 
-    baseline = {}
     root_directory = os.path.abspath(directory)
 
     all_files = []
@@ -42,14 +42,19 @@ def set_baseline(directory, ignore_list=None, progress=None, task=None):
     if progress and task:
         progress.update(task, total=len(all_files))
 
+    baseline = {}
+    errors = {}
+
     for abs_path in all_files:
-        info = get_file_info(abs_path)
+        info, err = get_file_info(abs_path)
         if info:
             baseline[abs_path] = info
+        else:
+            errors[abs_path] = err
         if progress and task:
             progress.update(task, advance=1)
 
-    return baseline
+    return baseline, errors
 
 
 def compare_baseline(old_baseline, new_baseline):

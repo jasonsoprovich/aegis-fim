@@ -27,7 +27,7 @@ class AegisHandler(FileSystemEventHandler):
             return
 
         abs_path = os.path.abspath(event.src_path)
-        file_info = get_file_info(abs_path)
+        file_info, error = get_file_info(abs_path)
 
         if file_info is None:
             return
@@ -52,7 +52,7 @@ class AegisHandler(FileSystemEventHandler):
 
         logging.warning(f"[WATCHER] CREATED: {rel_path}")
 
-        file_info = get_file_info(abs_path)
+        file_info, error = get_file_info(abs_path)
         if file_info:
             self.baseline[abs_path] = file_info
 
