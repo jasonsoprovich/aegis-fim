@@ -22,13 +22,9 @@ def get_file_info(filepath):
         return None, error_msg
 
 
-def set_baseline(directory, ignore_list=None, progress=None, task=None, verbose=False):
-    if ignore_list is None:
-        ignore_list = []
-
-    root_directory = os.path.abspath(directory)
-
+def collect_files(directory, ignore_list):
     all_files = []
+    root_directory = os.path.abspath(directory)
 
     for root, dirs, files in os.walk(root_directory):
         dirs[:] = [d for d in dirs if d not in ignore_list]
@@ -38,24 +34,24 @@ def set_baseline(directory, ignore_list=None, progress=None, task=None, verbose=
             abs_path = os.path.join(root, file)
             if not any(ignored in abs_path for ignored in ignore_list):
                 all_files.append(abs_path)
+    return all_files
 
-    if progress and task:
-        progress.update(task, total=len(all_files))
 
+def set_baseline(files_to_scan, progress=None, task=None, verbose=False):
     baseline = {}
     errors = {}
 
-    for abs_path in all_files:
+    for abs_path in files_to_scan:
         info, err = get_file_info(abs_path)
         if info:
             baseline[abs_path] = info
-            if verbose:
-                logging.info(f"Scanned: {abs_path}")
+            if verbose and progress:
+                progress.console.log(f"[grey]Scanned: {abs_path}[/]")
         else:
             errors[abs_path] = err
 
         if progress and task:
-            progress.update(task, advance=1)
+            progress.advance(task)
 
     return baseline, errors
 

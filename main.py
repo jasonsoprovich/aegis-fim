@@ -5,7 +5,7 @@ import os
 from rich.logging import RichHandler
 
 from data_manager import load_baseline, save_baseline
-from hash_engine import compare_baseline, set_baseline
+from hash_engine import collect_files, compare_baseline, set_baseline
 from ui import (
     create_scan_progress,
     display_errors,
@@ -87,11 +87,18 @@ def main():
 
     logging.info(f"Scanning: {target}.")
 
+    files_to_scan = collect_files(target, default_ignores)
+    total_files = len(files_to_scan)
+
+    current_scan = {}
+    scan_errors = {}
+
     with create_scan_progress() as progress:
-        task = progress.add_task("[cyan]Auditing integrity...", total=0)
+        task = progress.add_task("[cyan]Auditing integrity...", total=total_files)
         current_scan, scan_errors = set_baseline(
-            target, default_ignores, progress, task, verbose=verbose_mode
+            files_to_scan, progress, task, verbose=verbose_mode
         )
+        progress.update(task, completed=total_files)
 
     if scan_errors:
         display_errors(scan_errors)

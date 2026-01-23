@@ -5,7 +5,7 @@ from rich.panel import Panel
 from rich.progress import (
     BarColumn,
     Progress,
-    TaskProgressColumn,
+    SpinnerColumn,
     TextColumn,
     TimeRemainingColumn,
 )
@@ -15,17 +15,16 @@ from rich.text import Text
 console = Console()
 
 
-def status_update(message):
-    return console.status(message, spinner="dots")
-
-
 def create_scan_progress():
     return Progress(
+        SpinnerColumn(),
         TextColumn("[bold blue]{task.description}"),
-        BarColumn(complete_style="cyan", finished_style="green"),
-        TaskProgressColumn(),
+        BarColumn(bar_width=None, complete_style="cyan", finished_style="green"),
+        TextColumn("[progress.percentage]{task.percentage:>3.0f}%"),
         TimeRemainingColumn(),
         console=console,
+        expand=True,
+        # transient=True,  # optional: removes bar after finish
     )
 
 
@@ -52,7 +51,7 @@ def display_comparison_status():
 
 def display_header():
     header_text = Text("AEGIS - File Integrity Monitor", style="bold cyan")
-    console.print(Panel(header_text, subtitle="v0.1.3", expand=False))
+    console.print(Panel(header_text, subtitle="v0.1.4", expand=False))
 
 
 def display_results(changes):

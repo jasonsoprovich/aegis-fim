@@ -85,6 +85,16 @@ python3 main.py /path/to/monitor -w
 python3 main.py /path/to/monitor -b ./custom.json -i logs temp -w
 ```
 
+**Preview changes without saving (Dry Run):**
+```bash
+python3 main.py /path/to/monitor -d
+```
+
+**See every file being processed (Verbose):**
+```bash
+python3 main.py /path/to/monitor -v
+```
+
 ---
 
 ### Command-Line Options
@@ -92,9 +102,11 @@ python3 main.py /path/to/monitor -b ./custom.json -i logs temp -w
 | Flag | Long Form | Description |
 |------|-----------|-------------|
 | `-b` | `--baseline` | Specify custom baseline file path (default: `./data/baseline.json`) |
-| `-u` | `--update` | Prompt to update baseline if changes detected |
-| `-i` | `--ignore` | Space-separated list of files/directories to ignore |
-| `-w` | `--watch` | Enable real-time monitoring mode |
+| `-u` | `--update` | Interactively update the baseline if discrepancies are identified |
+| `-i` | `--ignore` | List of filenames or directory patterns to exclude from the audit |
+| `-w` | `--watch` | Enable persistent real-time filesystem monitoring |
+| `-d` | `--dry-run` | Preview changes without modifying the stored baseline |
+| `-v` | `--verbose` | Enable detailed output, listing every file scanned during the audit |
 | `-h` | `--help` | Show help message |
 
 ---
@@ -145,9 +157,9 @@ python3 main.py /path/to/monitor -b ./custom.json -i logs temp -w
 - [x] **Metadata Tracking:** Track file size, timestamps, and permissions
 - [x] **Dry-Run Mode:** Preview baseline updates without applying them
 - [x] **Error Summary:** Display files that couldn't be scanned with reasons
+- [x] **Verbose Mode:** Optional detailed output of all scanned files
 
 ### In Progress
-- [ ] **Verbose Mode:** Optional detailed output of all scanned files
 - [ ] **Export Results:** Save scan results to JSON for audit trails
 - [ ] **Config File Support:** YAML/JSON config for easier repeated scans
 - [ ] **Diff View:** Show before/after hashes for modified files
