@@ -22,7 +22,7 @@ def get_file_info(filepath):
         return None, error_msg
 
 
-def set_baseline(directory, ignore_list=None, progress=None, task=None):
+def set_baseline(directory, ignore_list=None, progress=None, task=None, verbose=False):
     if ignore_list is None:
         ignore_list = []
 
@@ -49,8 +49,11 @@ def set_baseline(directory, ignore_list=None, progress=None, task=None):
         info, err = get_file_info(abs_path)
         if info:
             baseline[abs_path] = info
+            if verbose:
+                logging.info(f"Scanned: {abs_path}")
         else:
             errors[abs_path] = err
+
         if progress and task:
             progress.update(task, advance=1)
 

@@ -61,6 +61,12 @@ def main():
         action="store_true",
         help="Preview changes without modifying the stored baseline",
     )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="Enable detailed output, listing every file scanned during the audit",
+    )
 
     args = parser.parse_args()
 
@@ -68,6 +74,7 @@ def main():
     baseline_filename = args.baseline
     update_mode = args.update
     dry_run = args.dry_run
+    verbose_mode = args.verbose
 
     default_ignores = ["logs", "data", ".DS_Store", ".git"]
     default_ignores.append(os.path.basename(baseline_filename))
@@ -83,7 +90,7 @@ def main():
     with create_scan_progress() as progress:
         task = progress.add_task("[cyan]Auditing integrity...", total=0)
         current_scan, scan_errors = set_baseline(
-            target, default_ignores, progress, task
+            target, default_ignores, progress, task, verbose=verbose_mode
         )
 
     if scan_errors:
