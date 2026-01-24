@@ -95,6 +95,11 @@ python3 main.py /path/to/monitor -d
 python3 main.py /path/to/monitor -v
 ```
 
+**Export results to JSON file (Export):**
+```bash
+python3 main.py /path/to/monitor -e
+```
+
 ---
 
 ### Command-Line Options
@@ -108,6 +113,7 @@ python3 main.py /path/to/monitor -v
 | `-d` | `--dry-run` | Preview changes without modifying the stored baseline |
 | `-v` | `--verbose` | Enable detailed output, listing every file scanned during the audit |
 | `-h` | `--help` | Show help message |
+| `-e` | `--export` | Export the audit results to a JSON file |
 
 ---
 
@@ -158,9 +164,9 @@ python3 main.py /path/to/monitor -v
 - [x] **Dry-Run Mode:** Preview baseline updates without applying them
 - [x] **Error Summary:** Display files that couldn't be scanned with reasons
 - [x] **Verbose Mode:** Optional detailed output of all scanned files
+- [x] **Export Results:** Save scan results to JSON for audit trails
 
 ### In Progress
-- [ ] **Export Results:** Save scan results to JSON for audit trails
 - [ ] **Config File Support:** YAML/JSON config for easier repeated scans
 - [ ] **Diff View:** Show before/after hashes for modified files
 

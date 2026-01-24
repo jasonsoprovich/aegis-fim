@@ -1,3 +1,4 @@
+import datetime
 import json
 import os
 
@@ -21,3 +22,19 @@ def load_baseline(filename):
             return json.load(f)
     except (IOError, json.JSONDecodeError) as e:
         raise IOError(f"Failed to load baseline: {e}")
+
+
+def export_report(changes, scan_summary, filename):
+    report = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "summary": scan_summary,
+        "details": changes,
+    }
+    try:
+        if os.path.dirname(filename):
+            os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, "w") as f:
+            json.dump(report, f, indent=4)
+        return True
+    except IOError as e:
+        raise IOError(f"Failed to export report: {e}")

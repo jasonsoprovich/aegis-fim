@@ -4,7 +4,7 @@ import os
 
 from rich.logging import RichHandler
 
-from data_manager import load_baseline, save_baseline
+from data_manager import export_report, load_baseline, save_baseline
 from hash_engine import collect_files, compare_baseline, set_baseline
 from ui import (
     create_scan_progress,
@@ -67,6 +67,11 @@ def main():
         action="store_true",
         help="Enable detailed output, listing every file scanned during the audit",
     )
+    parser.add_argument(
+        "-e",
+        "--export",
+        help="Export the audit results to a JSON file",
+    )
 
     args = parser.parse_args()
 
@@ -75,6 +80,7 @@ def main():
     update_mode = args.update
     dry_run = args.dry_run
     verbose_mode = args.verbose
+    export_mode = args.export
 
     default_ignores = ["logs", "data", ".DS_Store", ".git"]
     default_ignores.append(os.path.basename(baseline_filename))
@@ -131,6 +137,20 @@ def main():
                 len(changes["deleted"]),
                 len(changes["metadata_changed"]),
             )
+
+            if export_mode:
+                summary_stats = {
+                    "total_files": total_files,
+                    "new": len(changes["new"]),
+                    "modified": len(changes["modified"]),
+                    "deleted": len(changes["deleted"]),
+                    "metadata_changed": len(changes["metadata_changed"]),
+                }
+                try:
+                    export_report(changes, summary_stats, export_mode)
+                    logging.info(f"Audit report exported to: {export_mode}")
+                except Exception as e:
+                    logging.error(f"Failed to export report: {e}")
 
             if update_mode:
                 if dry_run:
