@@ -97,7 +97,7 @@ def main():
             logging.error(f"Config file not found: {args.config}")
 
     if args.path is None:
-        logging.error("No target path provided via CIA or Config")
+        logging.error("No target path provided via CLI or Config")
         return
 
     target = args.path
