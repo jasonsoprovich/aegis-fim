@@ -100,6 +100,11 @@ python3 main.py /path/to/monitor -v
 python3 main.py /path/to/monitor -e
 ```
 
+**Use a configuration file:**
+```bash
+python3 main.py -c config.json
+```
+
 ---
 
 ### Command-Line Options
@@ -114,6 +119,7 @@ python3 main.py /path/to/monitor -e
 | `-v` | `--verbose` | Enable detailed output, listing every file scanned during the audit |
 | `-h` | `--help` | Show help message |
 | `-e` | `--export` | Export the audit results to a JSON file |
+| `-c` | `--config` | Path to a JSON configuration file |
 
 ---
 

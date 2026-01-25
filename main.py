@@ -1,4 +1,5 @@
 import argparse
+import json
 import logging
 import os
 
@@ -30,7 +31,10 @@ def main():
     display_header()
 
     parser = argparse.ArgumentParser(description="Aegis File Integrity Monitor")
-    parser.add_argument("path", help="Target directory for integrity analysis")
+    parser.add_argument(
+        "path", nargs="?", help="Target directory for integrity analysis"
+    )
+
     parser.add_argument(
         "-b",
         "--baseline",
@@ -72,8 +76,29 @@ def main():
         "--export",
         help="Export the audit results to a JSON file",
     )
+    parser.add_argument("-c", "--config", help="Path to a JSON configuration file")
 
     args = parser.parse_args()
+
+    if args.config:
+        if os.path.exists(args.config):
+            try:
+                with open(args.config, "r") as f:
+                    config_data = json.load(f)
+                for key, value in config_data.items():
+                    if hasattr(args, key) and (
+                        getattr(args, key) is None or getattr(args, key) is False
+                    ):
+                        setattr(args, key, value)
+                logging.info(f"Configuration loaded from : {args.config}")
+            except Exception as e:
+                logging.error(f"Failed to load config: {e}")
+        else:
+            logging.error(f"Config file not found: {args.config}")
+
+    if args.path is None:
+        logging.error("No target path provided via CIA or Config")
+        return
 
     target = args.path
     baseline_filename = args.baseline
@@ -84,6 +109,7 @@ def main():
 
     default_ignores = ["logs", "data", ".DS_Store", ".git"]
     default_ignores.append(os.path.basename(baseline_filename))
+
     if args.ignore:
         default_ignores.extend(args.ignore)
 

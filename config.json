@@ -1,0 +1,7 @@
+{
+    "path": "./test_dir",
+    "baseline": "./data/baseline.json",
+    "ignore": ["logs", "temp", ".git", ".DS_Store"],
+    "verbose": true,
+    "export": "./exports/last_audit.json"
+}
