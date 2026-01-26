@@ -171,12 +171,13 @@ python3 main.py -c config.json
 - [x] **Error Summary:** Display files that couldn't be scanned with reasons
 - [x] **Verbose Mode:** Optional detailed output of all scanned files
 - [x] **Export Results:** Save scan results to JSON for audit trails
+- [x] **Config File Support:** YAML/JSON config for easier repeated scans
+- [x] **Metadata Diff View:** Detailed attribute comparisons
 
 ### In Progress
-- [ ] **Config File Support:** YAML/JSON config for easier repeated scans
-- [ ] **Diff View:** Show before/after hashes for modified files
 
 ### Future Goals (V2)
+- [ ] **Content Snapshotting:** Store copies of files to allow line-by-line `difflib` comparisons
 - [ ] **Report Generation:** Export scan results to HTML/Markdown.
 - [ ] **Alerting System:** Email or Slack notifications for critical file changes.
 - [ ] **Multithreading:** Speed up hashing on large directories.
@@ -192,7 +193,7 @@ python3 main.py -c config.json
 
 ## Tech Stack
 - **Language:** Python 3.x
-- **Libraries:** `hashlib`, `json`, `os`, `argparse`, `logging`, `rich`, `watchdog`
+- **Libraries:** `hashlib`, `json`, `os`, `argparse`, `logging`, `rich`, `watchdog`, `difflib`
 
 ## Contributing
 This is a learning project, but suggestions and improvements are welcome! 

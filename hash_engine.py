@@ -72,7 +72,8 @@ def compare_baseline(old_baseline, new_baseline):
 
             if new_info["hash"] != old_info["hash"]:
                 results["modified"].append(path)
-            elif (
+
+            if (
                 new_info["size"] != old_info["size"]
                 or new_info["permissions"] != old_info["permissions"]
             ):

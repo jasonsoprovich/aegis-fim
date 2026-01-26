@@ -11,6 +11,7 @@ from ui import (
     create_scan_progress,
     display_errors,
     display_header,
+    display_metadata_diffs,
     display_results,
     display_summary,
 )
@@ -77,6 +78,11 @@ def main():
         help="Export the audit results to a JSON file",
     )
     parser.add_argument("-c", "--config", help="Path to a JSON configuration file")
+    parser.add_argument(
+        "--diff",
+        action="store_true",
+        help="Show a line-by-line diff for modified text files",
+    )
 
     args = parser.parse_args()
 
@@ -106,6 +112,7 @@ def main():
     dry_run = args.dry_run
     verbose_mode = args.verbose
     export_mode = args.export
+    diff_mode = args.diff
 
     default_ignores = ["logs", "data", ".DS_Store", ".git"]
     default_ignores.append(os.path.basename(baseline_filename))
@@ -190,6 +197,9 @@ def main():
                     if confirm.lower() == "y":
                         save_baseline(current_scan, baseline_filename)
                         logging.info("Baseline successfully synchronized.")
+
+            if diff_mode and (changes["metadata_changed"] or changes["modified"]):
+                display_metadata_diffs(changes["metadata_changed"])
 
         if args.watch:
             from monitor import start_realtime_monitor

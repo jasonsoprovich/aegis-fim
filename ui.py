@@ -51,7 +51,7 @@ def display_comparison_status():
 
 def display_header():
     header_text = Text("AEGIS - File Integrity Monitor", style="bold cyan")
-    console.print(Panel(header_text, subtitle="v0.1.4", expand=False))
+    console.print(Panel(header_text, subtitle="v1.0.0", expand=False))
 
 
 def display_results(changes):
@@ -100,3 +100,35 @@ def display_summary(total, new, modified, deleted, metadata=0):
     table.add_row(str(total), str(new), str(modified), str(metadata), str(deleted))
 
     console.print(Panel(table, title="Scan Summary", expand=False))
+
+
+def display_metadata_diffs(metadata_changes):
+    if not metadata_changes:
+        return
+
+    table = Table(title="Detailed Metadata Changes", header_style="bold cyan", box=None)
+    table.add_column("File Path")
+    table.add_column("Attribute")
+    table.add_column("Old Value", style="red")
+    table.add_column("New Value", style="green")
+
+    for item in metadata_changes:
+        path = os.path.relpath(item["path"])
+
+        if item["old_size"] != item["new_size"]:
+            table.add_row(
+                path, "Size", f"{item['old_size']} B", f"{item['new_size']} B"
+            )
+
+        if item["old_permissions"] != item["new_permissions"]:
+            table.add_row(
+                path,
+                "Permissions",
+                f"{item['old_permissions']}",
+                f"{item['new_permissions']}",
+            )
+
+    console.print("\n")
+    console.print(
+        Panel(table, title="[bold cyan]Metadata Audit Breakdown[/]", expand=False)
+    )
